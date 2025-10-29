@@ -37,7 +37,8 @@ CodeVerdict Core
     ├── FastAPI REST API
     └── Real-time Dashboard
 ```
-<img width="939" height="1472" alt="image" src="https://github.com/user-attachments/assets/3a326986-b3ae-4888-88c9-340c4d316c57" />
+<img width="777" height="1276" alt="image" src="https://github.com/user-attachments/assets/a17a1464-9a00-4e34-8f58-07d69f58762d" />
+
 
 ## 📁 Complete File Structure
 
