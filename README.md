@@ -79,7 +79,7 @@ codeverdict/
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/codeverdict.git
+git clone https://github.com/cklam12345/codeverdict.git
 cd codeverdict
 
 # Install dependencies
