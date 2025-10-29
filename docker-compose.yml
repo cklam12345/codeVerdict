@@ -1,0 +1,63 @@
+version: '3.8'
+services:
+  codeverdict-api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - NEO4J_URI=bolt://neo4j:7687
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+      - ARGILLA_API_URL=http://argilla:6900
+    depends_on:
+      - mlflow
+      - neo4j
+      - argilla
+    volumes:
+      - ./:/app
+    command: uvicorn codeverdict.api.main:app --host 0.0.0.0 --port 8000 --reload
+
+  mlflow:
+    image: mlflow/mlflow:latest
+    ports:
+      - "5000:5000"
+    environment:
+      - MLFLOW_TRACKING_URI=sqlite:///mlflow.db
+    volumes:
+      - mlflow_data:/mlflow
+    command: mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root /mlflow --host 0.0.0.0
+
+  neo4j:
+    image: neo4j:5.15
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      - NEO4J_AUTH=neo4j/codeverdict
+      - NEO4J_PLUGINS=["apoc"]
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+
+  argilla:
+    image: argilla/argilla-server:latest
+    ports:
+      - "6900:6900"
+    environment:
+      - ARGILLA_ELASTICSEARCH=http://elasticsearch:9200
+      - ARGILLA_HOME=/var/lib/argilla
+    depends_on:
+      - elasticsearch
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.9.0
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+
+volumes:
+  mlflow_data:
+  neo4j_data:
+  neo4j_logs:
+  elasticsearch_data:
